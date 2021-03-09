@@ -8,10 +8,14 @@ function App() {
   const [userName, setUsername] = useState("");
   const [followers, setFollowers] = useState("");
   const [following, setFollowing] = useState("");
-  const [language, setLanguage] = useState("");
+  const [languages, setLanguage] = useState("");
   const [name, setName] = useState("");
-  const [repos, setRepos] = useState("");
+  const [repos, setRepos] = useState([]);
   const [userInput, setUserInput] = useState("");
+  const [description, setDescription] = useState("");
+  const [url, setUrl] = useState("");
+  const [stars, setStars] = useState("");
+  const [repoName, setRepoName] = useState('');
   const [error, setError] = useState(null);
   useEffect(() => {
     fetch("https://api.github.com/users/jzboyd")
@@ -31,39 +35,67 @@ function App() {
     setAvatar(avatar_url)
   }
 
+  const setDatatesting = ({ description, url, stargazers_count, language, name }) => {
+    setDescription(description)
+    setUrl(url)
+    setStars(stargazers_count)
+    setLanguage(language)
+    setRepoName(name)
+  };
+
 
   const handleSearch = (e) => {
+    e.preventDefault()
     setUserInput(e.target.value);
 
   };
 
-  const handleSubmit = () => {
-    fetch(`https://api.github.com/users/evanepperson`)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data)
-      setData(data)
-    })
 
-  }
+
+    const handleSubmittesting = () => {
+      fetch(`https://api.github.com/users/${userInput}/repos`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setDatatesting(data[1]);
+        });
+    };
+
+      const handleSubmit = () => {
+        fetch(`https://api.github.com/users/${userInput}`)
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            setData(data);
+            handleSubmittesting();
+          });
+      };
+
+      // const renderRepo = (repo) => {
+      //   return(
+      //     <div key={repo.id}>
+      //       <h2>
+      //         {repo.name}
+      //       </h2>
+      //     </div>
+      //   )
+
+      // }
 
 
 
   return (
     <>
-      <div className="navbar">Github Search</div>
+    <button onClick={handleSubmittesting}>testing</button>
+    <div id='anyid'> description <span>{description}</span></div>
+
+    <div> how many stars you have <span>{stars}</span></div>
+    <div>languages <span>{languages}</span></div>
+    <div>repo Name <span>{repoName}</span></div>
+    {/* <div>
+      {repos.map(renderRepo)}
+    </div> */}
       <div className="search">
-        <form className="form" onSubmit={handleSubmit}>
-          <input
-            className="input"
-            name='name'
-            placeholder="Search Github"
-            onChange={handleSearch}
-          />
-          <button className="button" onClick={handleSubmit}>
-            Search
-          </button>
-        </form>
         <Form onSubmit={handleSubmit}>
           <Form.Group>
             <Form.Input
