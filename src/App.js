@@ -136,6 +136,7 @@ import "./App.css";
 import axios from "axios";
 import RepoDetails from "./Details";
 import Profile from "./Profilepage";
+import { render } from "@testing-library/react";
 function App() {
   const [avatar, setAvatar] = useState("");
   const [username, setUsername] = useState("");
@@ -154,11 +155,9 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     searchRepos();
+    document.querySelector("#asc").style.display = "block";
+    document.querySelector("#dsc").style.display = "none";
   };
-    const handleSubmittest = (e) => {
-      e.preventDefault();
-      searchRepos();
-    };
   const searchRepos = () => {
     axios({
       method: "get",
@@ -184,16 +183,36 @@ function App() {
     });
   };
 
+
   const testing = () => {
-      repos
+    return (
+            repos
         .sort((a, b) => {
           if (a.stargazers_count > b.stargazers_count) return -1;
           else if (a.stargazers_count < b.stargazers_count) return 1;
           return 0;
         })
-        .map(renderRepo);
+        .map(renderRepo)
+    )
+
   }
 
+  const testingdesc = () => {
+        return repos
+          .sort((a, b) => {
+            if (a.stargazers_count > b.stargazers_count) return 1;
+            else if (a.stargazers_count < b.stargazers_count) return -1;
+            return 0;
+          })
+          .map(renderRepo);
+  }
+
+  const asc = (e) => {    
+    e.preventDefault();
+    searchRepos();
+    document.querySelector("#asc").style.display = "none";
+    document.querySelector("#dsc").style.display = "block";
+  }
 
 
   return (
@@ -210,18 +229,15 @@ function App() {
           <button className="button" onClick={handleSubmit}>
             Search
           </button>
-          <button className="button" onClick={handleSubmittest}>
-            Search
+          <button onClick={asc}>
+            asc
           </button>
         </form>
-        <div className="results-container">
-          {repos
-            .sort((a, b) => {
-              if (a.stargazers_count > b.stargazers_count) return -1;
-              else if (a.stargazers_count < b.stargazers_count) return 1;
-              return 0;
-            })
-            .map(renderRepo)}
+        <div id="asc" className="results-container">
+          {testing()}
+        </div>
+        <div id="dsc" className="results-container">
+          {testingdesc()}
         </div>
         <RepoDetails details={details} />
       </div>
