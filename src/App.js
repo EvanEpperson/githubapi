@@ -213,6 +213,12 @@ function App() {
     document.querySelector("#asc").style.display = "none";
     document.querySelector("#dsc").style.display = "block";
   }
+    const dsc = (e) => {
+      e.preventDefault();
+      searchRepos();
+      document.querySelector("#asc").style.display = "block";
+      document.querySelector("#dsc").style.display = "none";
+    };
 
 
   return (
@@ -229,9 +235,8 @@ function App() {
           <button className="button" onClick={handleSubmit}>
             Search
           </button>
-          <button onClick={asc}>
-            asc
-          </button>
+          <button onClick={asc}>asc</button>
+          <button onClick={dsc}>dsc</button>
         </form>
         <div id="asc" className="results-container">
           {testing()}
