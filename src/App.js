@@ -155,7 +155,8 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     searchRepos();
-    document.querySelector("#asc").style.display = "block";
+    document.querySelector("#first").style.display='block'
+    document.querySelector("#asc").style.display = "none";
     document.querySelector("#dsc").style.display = "none";
   };
   
@@ -165,17 +166,19 @@ function App() {
       url: `https://api.github.com/users/${username}/repos`,
     }).then((res) => {
       setRepos(res.data);
-      // testing()
+      // console.log(res.data)
     });
   };
+
   const renderRepo = (repo) => {
     return (
-      <div className="row" onClick={() => getDetails(repo.name)} key={repo.id}>
+      <div className="row" onClick={() => {getDetails(repo.name); getDetailsLanguages(repo.name)}} key={repo.id}>
         <h2 className="repo-name">{repo.name}</h2>
       </div>
     );
   };
-  const getDetails = (repoName) => {
+
+  const getDetails = (repoName, e) => {
     axios({
       method: "get",
       url: `https://api.github.com/repos/${username}/${repoName}`,
@@ -184,6 +187,23 @@ function App() {
     });
   };
 
+    const getDetailsLanguages = (repoName) => {
+      axios({
+        method: "get",
+        url: `https://api.github.com/repos/${username}/${repoName}/languages`,
+      }).then((res) => {
+        setDetails(res.data);
+        console.log('testing');
+        console.log(res.data);
+      });
+    };
+
+
+  // const first = () => {
+  //   return <div className="results-container">
+  //     {repos.map(renderRepo)}
+  //     </div>;
+  // }
 
   const testing = () => {
     return (
@@ -207,15 +227,17 @@ function App() {
           .map(renderRepo);
   }
 
-  const asc = (e) => {    
+  const asc = (e) => {
     e.preventDefault();
     searchRepos();
+    document.querySelector("#first").style.display = "none";
     document.querySelector("#asc").style.display = "none";
     document.querySelector("#dsc").style.display = "block";
   }
     const dsc = (e) => {
       e.preventDefault();
       searchRepos();
+      document.querySelector("#first").style.display = "none";
       document.querySelector("#asc").style.display = "block";
       document.querySelector("#dsc").style.display = "none";
     };
@@ -238,6 +260,9 @@ function App() {
           <button onClick={asc}>dsc</button>
           <button onClick={dsc}>asc</button>
         </form>
+        <div id="first" className="results-container">
+          {repos.map(renderRepo)}
+        </div>
         <div id="asc" className="results-container">
           {testing()}
         </div>
@@ -246,7 +271,7 @@ function App() {
         </div>
         <RepoDetails details={details} />
       </div>
-      <Profile />
+      {/* <Profile /> */}
     </>
   );
 }
