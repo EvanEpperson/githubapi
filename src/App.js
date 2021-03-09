@@ -158,6 +158,7 @@ function App() {
     document.querySelector("#asc").style.display = "block";
     document.querySelector("#dsc").style.display = "none";
   };
+  
   const searchRepos = () => {
     axios({
       method: "get",
@@ -235,8 +236,8 @@ function App() {
           <button className="button" onClick={handleSubmit}>
             Search
           </button>
-          <button onClick={asc}>asc</button>
-          <button onClick={dsc}>dsc</button>
+          <button onClick={asc}>dsc</button>
+          <button onClick={dsc}>asc</button>
         </form>
         <div id="asc" className="results-container">
           {testing()}
